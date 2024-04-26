@@ -8,9 +8,8 @@
 
 #
 
-import random
-
 import math
+import random
 
 lower = int(input("Enter lower of number:\n"))
 upper = int(input("Enter upper of number:\n"))
