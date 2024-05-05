@@ -1,4 +1,5 @@
-name: Build and Push Docker Image
+
+name: Build and Push Docker Image and Deploy AKS with Terraform
 
 on:
   push:
@@ -24,3 +25,29 @@ jobs:
 
       - name: Push Docker image to Docker Hub
         run: docker push kollexy/movie-api:latest
+
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.0
+
+      - name: Terraform Init 
+        run: terraform init ./aks
+
+      - name: Terraform Plan
+        run: terraform plan ./aks
+
+      - name: Terraform Apply
+        run: terraform apply ./aks -auto-approve
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
