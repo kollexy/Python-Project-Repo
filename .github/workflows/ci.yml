@@ -39,13 +39,13 @@ jobs:
           terraform_version: 1.0.0
 
       - name: Terraform Init 
-        run: terraform init ./aks
+        run: terraform init -chdir=./aks
 
       - name: Terraform Plan
-        run: terraform plan ./aks
+        run: terraform plan -chdir=./aks
 
       - name: Terraform Apply
-        run: terraform apply ./aks -auto-approve
+        run: terraform apply -chdir=./aks -auto-approve
         env:
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
