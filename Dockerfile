@@ -1,7 +1,7 @@
 FROM python:3.9
 
 # Copy the requirements file into the container
-COPY main.py /app/
+COPY app.py /app/
 
 # Set the working directory in the container
 WORKDIR /app
