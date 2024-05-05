@@ -1,8 +1,9 @@
 terraform {
-#   backend "azurerm" {
-#     storage_account_name = "<storage_account_name>"
-#     container_name       = "<container_name>"
-#     key                  = "terraform.tfstate"  # The name of your state file
-#     access_key           = "<access_key>"
-#   }
-# }
+  backend "azurerm" {
+    resource_group_name  = "rg-terraform-statefile"  
+    storage_account_name = "terraformstatefileapp"                     
+    container_name       = "terraformstatefile"                      
+    key                  = "terraform.tfstate"        
+  }
+}
+
