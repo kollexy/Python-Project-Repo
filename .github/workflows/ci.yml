@@ -88,9 +88,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # - name: Docker Pull
-      #   run:
-      #     docker pull kollexy/movie-api
+      - name: Docker Pull
+        run:
+          docker pull kollexy/movie-api
 
       
 
@@ -109,14 +109,14 @@ jobs:
           admin: 'false'
           use-kubelogin: 'true'
 
-      # - name: Create AKS Secret
-      #   run:
-      #     kubectl create secret docker-registry dockerhub-secret --docker-username=${{ secrets.DOCKER_USERNAME }} --docker-password=${{ secrets.DOCKER_PASSWORD }} --docker-email=${{ secrets.DOCKER_EMAIL }} --docker-server=https://index.docker.io/v1/
+      - name: Deploy
+        run:
+          kubectl apply -f ${{ vars.DEPLOYMENT_MANIFEST_PATH }}
 
 
-      - name: Deploys application
-        uses: Azure/k8s-deploy@v4
-        with:
-          action: deploy
-          manifests: ${{ vars.DEPLOYMENT_MANIFEST_PATH }}
-          images: ${{ vars.DOCKER_IMAGE }}
+      # - name: Deploys application
+      #   uses: Azure/k8s-deploy@v4
+      #   with:
+      #     action: deploy
+      #     manifests: ${{ vars.DEPLOYMENT_MANIFEST_PATH }}
+      #     images: ${{ vars.DOCKER_IMAGE }}
