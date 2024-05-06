@@ -16,4 +16,4 @@ spec:
       - name: movie-app-container
         image: kollexy/movie-api:latest
         ports:
-        - containerPort: 5000
+        - containerPort: 80
