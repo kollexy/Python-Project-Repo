@@ -17,3 +17,5 @@ spec:
         image: kollexy/movie-app:latest
         ports:
         - containerPort: 5000
+      imagePullSecrets:
+      - name: dockerhub-secret
