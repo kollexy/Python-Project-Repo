@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: movie-app-container
-        image: https://hub.docker.com/r/kollexy/movie-api
+        image: hub.docker.com/r/kollexy/movie-api
         ports:
         - containerPort: 5000
       imagePullSecrets:
