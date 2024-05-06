@@ -14,7 +14,6 @@ spec:
     spec:
       containers:
       - name: movie-app-container
-        image: docker.io/library/movie-app:latest
+        image: docker.io/library/movie-api:latest
         ports:
         - containerPort: 5000
-
