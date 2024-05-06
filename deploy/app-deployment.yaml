@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: movie-app-container
-        image: movie-app:latest
+        image: kollexy/movie-app:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
