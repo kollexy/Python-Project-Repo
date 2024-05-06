@@ -88,6 +88,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      
+
+
       - name: Set up kubelogin for non-interactive login
         uses: azure/use-kubelogin@v1
         with:
@@ -101,6 +104,15 @@ jobs:
           cluster-name: ${{ vars.CLUSTER_NAME }}
           admin: 'false'
           use-kubelogin: 'true'
+
+      - name: Create AKS Secret
+        run:
+          kubectl create secret docker-registry dockerhub-secret \
+          --docker-server=https://index.docker.io/v1/ \
+          --docker-username=${{ secrets.DOCKER_USERNAME }} \
+          --docker-password=${{ secrets.DOCKER_PASSWORD }} \
+          --docker-email=${{ secrets.DOCKER_EMAIL }}
+
 
       - name: Deploys application
         uses: Azure/k8s-deploy@v4

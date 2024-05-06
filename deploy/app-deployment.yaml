@@ -15,5 +15,8 @@ spec:
       containers:
       - name: movie-app-container
         image: movie-app:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
+      imagePullSecrets:
+      - name: dockerhub-secret
