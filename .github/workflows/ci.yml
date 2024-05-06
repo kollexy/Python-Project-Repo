@@ -4,7 +4,7 @@ name: Build and Push Docker Image and Deploy AKS with Terraform
 on:
   push:
     branches:
-      - app
+      - main
 
 jobs:
   build-and-push:
@@ -67,3 +67,42 @@ jobs:
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+
+  deploy:
+  env:
+      DOCKER_IMAGE: ${{ env.DOCKER_IMAGE }}
+      RESOURCE_GROUP: ${{ env.RESOURCE_GROUP }} # rg-movie-app-api ##
+      CLUSTER_NAME: ${{ env.CLUSTER_NAME }}  # aks-movie-app-api
+      DEPLOYMENT_MANIFEST_PATH: .${{ env.DEPLOYMENT_MANIFEST_PATH }}
+      runs-on: ubuntu-latest
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Azure login
+      uses: azure/login@v1.4.6
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Set up kubelogin for non-interactive login
+      uses: azure/use-kubelogin@v1
+      with:
+        kubelogin-version: 'v0.0.25'
+
+    - name: Get K8s context
+      uses: azure/aks-set-context@v3
+      with:
+        resource-group: ${{ env.RESOURCE_GROUP }}
+        cluster-name: ${{ env.CLUSTER_NAME }}
+        admin: 'false'
+        use-kubelogin: 'true'
+
+    - name: Deploys application
+      uses: Azure/k8s-deploy@v4
+      with:
+        action: deploy
+        manifests: ${{ env.DEPLOYMENT_MANIFEST_PATH }}
+        images: ${{ env.DOCKER_IMAGE }}
