@@ -1,4 +1,4 @@
-name: Build, Push, Terraform Apply, and Deploy AKS
+name: Build, Push and Deploy Movie-app to AKS
 
 on:
   push:
@@ -44,11 +44,6 @@ jobs:
 
       - name: Terraform Init 
         run: cd aks && terraform init
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
       - name: Terraform Plan
         run: cd aks && terraform plan
@@ -64,6 +59,12 @@ jobs:
   deploy-to-aks:
     runs-on: ubuntu-latest
 
+    env:
+      DOCKER_IMAGE: ${{ env.DOCKER_IMAGE }}
+      RESOURCE_GROUP: ${{ env.RESOURCE_GROUP }} # rg-movie-app-api ##
+      CLUSTER_NAME: ${{ env.CLUSTER_NAME }}  # aks-movie-app-api
+      DEPLOYMENT_MANIFEST_PATH: .${{ env.DEPLOYMENT_MANIFEST_PATH }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -71,13 +72,12 @@ jobs:
       - name: Azure login
         uses: azure/login@v1.4.6
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
 
       - name: Set up kubelogin for non-interactive login
         uses: azure/use-kubelogin@v1
         with:
+          # trunk-ignore(yamllint/quoted-strings)
           kubelogin-version: 'v0.0.25'
 
       - name: Get K8s context
