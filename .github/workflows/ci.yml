@@ -1,10 +1,5 @@
 name: Build, Push and Deploy Movie-app to AKS
 
-env:
-  DOCKER_IMAGE: ${{ env.DOCKER_IMAGE }}
-  RESOURCE_GROUP: ${{ env.RESOURCE_GROUP }} # rg-movie-app-api ##
-  CLUSTER_NAME: ${{ env.CLUSTER_NAME }}  # aks-movie-app-api
-  DEPLOYMENT_MANIFEST_PATH: .${{ env.DEPLOYMENT_MANIFEST_PATH }}
 
 on:
   push:
@@ -82,8 +77,8 @@ jobs:
       - name: Get K8s context
         uses: azure/aks-set-context@v3
         with:
-          resource-group: ${{ secrets.RESOURCE_GROUP }}
-          cluster-name: ${{ secrets.CLUSTER_NAME }}
+          resource-group: ${{ vars.RESOURCE_GROUP }}
+          cluster-name: ${{ vars.CLUSTER_NAME }}
           admin: 'false'
           use-kubelogin: 'true'
 
@@ -91,5 +86,5 @@ jobs:
         uses: Azure/k8s-deploy@v4
         with:
           action: deploy
-          manifests: ./your-deployment-manifest.yaml
-          images: kollexy/movie-api:latest
+          manifests: ${{ vars.DEPLOYMENT_MANIFEST_PATH }}
+          images: ${{ vars.DOCKER_IMAGE }}
