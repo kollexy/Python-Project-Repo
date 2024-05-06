@@ -3,7 +3,7 @@ name: Build, Push and Deploy Movie-app to AKS
 on:
   push:
     branches:
-      - main
+      - mybranch
 
 jobs:
   build-and-push:
