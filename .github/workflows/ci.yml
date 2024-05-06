@@ -3,7 +3,7 @@ name: Build, Push, Terraform Apply, and Deploy AKS
 on:
   push:
     branches:
-      - app
+      - main
 
 jobs:
   build-and-push:
