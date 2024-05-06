@@ -13,4 +13,4 @@ RUN pip install flask
 EXPOSE 80
 
 # Command to run the application
-CMD ["sudo", "python", "app.py"]
+CMD ["python", "app.py"]
