@@ -15,8 +15,6 @@ spec:
       containers:
       - name: movie-app-container
         image: kollexy/movie-app:latest
-        imagePullPolicy: Always
         ports:
         - containerPort: 5000
-      imagePullSecrets:
-      - name: dockerhub-secret
+      imagePullPolicy: Always
