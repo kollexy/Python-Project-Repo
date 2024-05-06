@@ -88,9 +88,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Docker Pull
-        run:
-          docker pull kollexy/movie-api
+      # - name: Docker Pull
+      #   run:
+      #     docker pull kollexy/movie-api
 
       
 
