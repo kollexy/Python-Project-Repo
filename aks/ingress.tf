@@ -5,7 +5,6 @@ resource "helm_release" "ingress-nginx" {
   create_namespace = true
   repository       = "https://kubernetes.github.io/ingress-nginx"
   chart            = "ingress-nginx"
-
   values = [
     file("ingress-nginx-values.yaml")
   ]
