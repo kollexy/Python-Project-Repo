@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: movie-app-ingress
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
@@ -12,4 +13,4 @@ spec:
           service:
             name: movie-app-service
             port:
-              number: 5000
+              number: 80
