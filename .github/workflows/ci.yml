@@ -4,7 +4,7 @@ name: Build and Push Docker Image and Deploy AKS with Terraform
 on:
   push:
     branches:
-      - main
+      - app
 
 jobs:
   build-and-push:
