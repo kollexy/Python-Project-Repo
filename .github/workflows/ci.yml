@@ -1,9 +1,16 @@
 name: Build, Push and Deploy Movie-app to AKS
 
+env:
+  DOCKER_IMAGE: ${{ env.DOCKER_IMAGE }}
+  RESOURCE_GROUP: ${{ env.RESOURCE_GROUP }} # rg-movie-app-api ##
+  CLUSTER_NAME: ${{ env.CLUSTER_NAME }}  # aks-movie-app-api
+  DEPLOYMENT_MANIFEST_PATH: .${{ env.DEPLOYMENT_MANIFEST_PATH }}
+
 on:
   push:
     branches:
       - mybranch
+
 
 jobs:
   build-and-push:
@@ -57,14 +64,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
   deploy-to-aks:
-    runs-on: ubuntu-latest
-
-    env:
-      DOCKER_IMAGE: ${{ env.DOCKER_IMAGE }}
-      RESOURCE_GROUP: ${{ env.RESOURCE_GROUP }} # rg-movie-app-api ##
-      CLUSTER_NAME: ${{ env.CLUSTER_NAME }}  # aks-movie-app-api
-      DEPLOYMENT_MANIFEST_PATH: .${{ env.DEPLOYMENT_MANIFEST_PATH }}
-
+    runs-on: ubuntu-latest   
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
