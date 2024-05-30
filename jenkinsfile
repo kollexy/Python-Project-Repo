@@ -1,7 +1,13 @@
 pipeline {
     agent any
 
-    
+    environment {
+        // Fetch individual credentials
+        ARM_CLIENT_ID = credentials('azure-client-id')
+        ARM_CLIENT_SECRET = credentials('azure-client-secret')
+        ARM_TENANT_ID = credentials('azure-tenant-id')
+        ARM_SUBSCRIPTION_ID = credentials('azure-subscription-id')
+    }
 
     stages {
         stage('Checkout') {
@@ -12,14 +18,16 @@ pipeline {
 
         stage('Azure Login') {
             steps {
-                script {
-                    withCredentials([string(credentialsId: 'azure-service-principal', variable: 'AZURE_CREDENTIALS')]) {
-                        def creds = readJSON text: AZURE_CREDENTIALS
-                        env.ARM_CLIENT_ID = creds.appId
-                        env.ARM_CLIENT_SECRET = creds.password
-                        env.ARM_TENANT_ID = creds.tenant
-                        sh 'az login --service-principal --username $ARM_CLIENT_ID --password $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID'
-                    }
+                withCredentials([
+                    string(credentialsId: 'azure-client-id', variable: 'ARM_CLIENT_ID'),
+                    string(credentialsId: 'azure-client-secret', variable: 'ARM_CLIENT_SECRET'),
+                    string(credentialsId: 'azure-tenant-id', variable: 'ARM_TENANT_ID'),
+                    string(credentialsId: 'azure-subscription-id', variable: 'ARM_SUBSCRIPTION_ID')
+                ]) {
+                    sh '''
+                        az login --service-principal --username $ARM_CLIENT_ID --password $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID
+                        az account set --subscription $ARM_SUBSCRIPTION_ID
+                    '''
                 }
             }
         }
