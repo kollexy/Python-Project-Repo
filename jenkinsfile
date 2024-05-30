@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+
+    environment {
+        AZURE_CREDENTIALS = credentials('azure-service-principal')
+        ARM_CLIENT_ID = sh(script: 'echo $AZURE_CREDENTIALS | jq -r .appId', returnStdout: true).trim()
+        ARM_CLIENT_SECRET = sh(script: 'echo $AZURE_CREDENTIALS | jq -r .password', returnStdout: true).trim()
+        ARM_SUBSCRIPTION_ID = '<your-subscription-id>'
+        ARM_TENANT_ID = sh(script: 'echo $AZURE_CREDENTIALS | jq -r .tenant', returnStdout: true).trim()
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Azure Login') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'azure-service-principal', variable: 'AZURE_CREDENTIALS')]) {
+                        def creds = readJSON text: AZURE_CREDENTIALS
+                        env.ARM_CLIENT_ID = creds.appId
+                        env.ARM_CLIENT_SECRET = creds.password
+                        env.ARM_TENANT_ID = creds.tenant
+                        sh 'az login --service-principal --username $ARM_CLIENT_ID --password $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID'
+                    }
+                }
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                dir('aks') {
+                    sh 'terraform init'
+                }
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                dir('aks') {
+                    sh 'terraform plan'
+                }
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                dir('aks') {
+                    sh 'terraform apply -auto-approve'
+                }
+            }
+        }
+    }
+}
