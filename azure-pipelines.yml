@@ -19,11 +19,10 @@ steps:
 - task: Docker@2
   displayName: 'Build Docker Image'
   inputs:
-    command: 'build'
     repository: '$(imageName)'
-    Dockerfile: '$(System.DefaultWorkingDirectory)/app/Dockerfile'  # Path to your Dockerfile
-    tags: |
-      $(imageName):$(imageTag)
+    command: 'build'
+    Dockerfile: '$(System.DefaultWorkingDirectory)/app/Dockerfile'
+    tags: '$(imageTag)'
 
 # Step 3: Install Trivy using Docker (no need to install it separately, just use it as a Docker container)
 - script: |
