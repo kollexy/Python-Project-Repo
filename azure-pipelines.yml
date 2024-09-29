@@ -23,7 +23,10 @@ steps:
     command: 'build'
     Dockerfile: '$(System.DefaultWorkingDirectory)/app/Dockerfile'
     tags: '$(imageTag)'
-
+- script: |
+    docker pull aquasec/trivy:latest
+  displayName: 'Pull Trivy Image'
+  
 # Step 3: Install Trivy using Docker (no need to install it separately, just use it as a Docker container)
 - script: |
     docker run --rm -v $(System.DefaultWorkingDirectory):/root/.cache/ aquasec/trivy:latest image --exit-code 1 --severity CRITICAL,HIGH $(imageName)
