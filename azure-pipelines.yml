@@ -8,7 +8,7 @@ pool:
 
 variables:
   imageName: 'myapp:latest'  # Name of the Docker image to scan
-
+  imageTag: 'latest'
 steps:
 
 # Step 1: Install Docker (if not already installed on agent)
@@ -23,7 +23,7 @@ steps:
     repository: '$(imageName)'
     Dockerfile: '$(System.DefaultWorkingDirectory)/app/Dockerfile'  # Path to your Dockerfile
     tags: |
-      $(imageName)
+      $(imageName):$(imageTag)
 
 # Step 3: Install Trivy using Docker (no need to install it separately, just use it as a Docker container)
 - script: |
