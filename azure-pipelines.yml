@@ -7,7 +7,7 @@ pool:
   vmImage: 'ubuntu-latest'  # Use Ubuntu with Docker support
 
 variables:
-  imageName: 'myapp:latest'  # Name of the Docker image to scan
+  imageName: 'myapp'  # Name of the Docker image to scan
   imageTag: 'latest'
 steps:
 
