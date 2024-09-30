@@ -14,7 +14,9 @@ steps:
 # Step 1: Install Docker (if not already installed on agent)
 - task: DockerInstaller@0
   displayName: 'Install Docker'
-
+- script: |
+    sudo systemctl start docker
+  displayName: 'Start Docker Daemon'
 # Step 2: Build your Docker image (optional, if you're building the image in the same pipeline)
 - task: Docker@2
   displayName: 'Build Docker Image'
@@ -26,7 +28,11 @@ steps:
 - script: |
     docker pull aquasec/trivy:latest
   displayName: 'Pull Trivy Image'
-  
+
+
+
+
+
 # Step 3: Install Trivy using Docker (no need to install it separately, just use it as a Docker container)
 - script: |
     imageName="myapp:latest"
