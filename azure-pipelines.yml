@@ -33,10 +33,10 @@ steps:
 
 
 
-# Step 3: Install Trivy using Docker (no need to install it separately, just use it as a Docker container)
 - script: |
-    imageName="myapp:latest"
-    docker run --rm -v $(System.DefaultWorkingDirectory):/root/.cache/ aquasec/trivy:latest image --exit-code 1 --severity CRITICAL,HIGH $(imageName)
+    docker run --rm \
+      -v /var/run/docker.sock:/var/run/docker.sock \  # Mount the Docker socket for Trivy
+      aquasec/trivy:latest image --exit-code 1 --severity CRITICAL,HIGH myapp:latest
   displayName: 'Scan Docker Image with Trivy'
   failOnStderr: true
 
