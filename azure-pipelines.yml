@@ -9,7 +9,7 @@ steps:
 
 # Step 2: Build the Docker image locally
 - script: |
-    docker build -t myapp:latest .
+    docker build -t myapp:latest ./app
   displayName: 'Build Docker Image'
 
 # Step 3: Pull the Trivy image (optional step since the latest image is pulled when needed)
